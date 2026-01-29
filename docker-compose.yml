@@ -1,11 +1,11 @@
 version: "3.9"
 
 networks:
-  transferNet:
+  transfer_net:
     driver: bridge
 
 services:
-  postgresServerDb:
+  db:
     image: postgres:18.1
     container_name: postgres_db
     restart: always
@@ -18,10 +18,9 @@ services:
     volumes:
       - /data/transfer/postgres:/var/lib/postgresql
     networks:
-      - transferNet
+      - transfer_net
     
-  api:
-    #build: ./WebApiTransfer
+  server:
     image: utereskovi/transfer-api:latest
     container_name: transfer_api
     volumes:
@@ -32,14 +31,16 @@ services:
     ports:
       - "5898:8080"
     depends_on:
-      - postgresServerDb
+      - db
     networks:
-      - transferNet
+      - transfer_net
 
   front:
     image: utereskovi/transfer-react:latest
-    #build: 
-    #  context: ./my-transfer-ts
     container_name: react_front
+    depends_on:
+      - server
     ports:
       - "3987:80"
+    networks:
+      - transfer_net
