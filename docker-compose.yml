@@ -16,7 +16,7 @@ services:
       POSTGRES_USER: ${POSTGRES_USER}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
     volumes:
-      - /data/transfer/postgres:/var/lib/postgresql
+      - ${VOLUME_POSTGRES}
     networks:
       - transferNet
     
@@ -28,7 +28,7 @@ services:
       - /data/transfer/images:/app/images
     environment:
       ASPNETCORE_ENVIRONMENT: Production
-      ConnectionStrings__DefaultConnection: Host=postgresServerDb;Database=mydb;Port=5432;Username=ivan;Password=marko123halosh
+      ConnectionStrings__DefaultConnection: Host=postgresServerDb;Database=${POSTGRES_DB};Username=${POSTGRES_USER};Password=${POSTGRES_PASSWORD}
     ports:
       - "5898:8080"
     depends_on:
